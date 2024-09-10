@@ -3,14 +3,19 @@ import { validationResult } from "express-validator";
 import User from "../../models/userModel";
 import { generateToken, hashing } from "../../helpers/authHelper";
 import bcrypt from "bcrypt";
+import asyncHandler from "express-async-handler";
+import { DatabaseError, ValidationError } from "../../helpers/error";
 
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = asyncHandler(async (req: Request, res: Response) => {
   const errors = validationResult(req); //checking for validation error;
   if (!errors.isEmpty()) {
-    res.status(400).json({
-      message: errors.array(),
-    });
-    return;
+    throw new ValidationError(
+      "Validation failed: " +
+        errors
+          .array()
+          .map((e) => e.msg)
+          .join(", ")
+    );
   } //validation failed;
 
   const { username, email, password } = req.body;
@@ -33,20 +38,25 @@ export const createUser = async (req: Request, res: Response) => {
 
   let newUser = await user.save(); //new user creation
 
-  if (newUser) {
-    res.status(200).json({
-      message: `Thank you for registering`,
-    });
+  if (!newUser) {
+    throw new DatabaseError("Failed to create User");
   }
-};
 
-export const signInUser = async (req: Request, res: Response) => {
+  res.status(200).json({
+    message: `Thank you for registering`,
+  });
+});
+
+export const signInUser = asyncHandler(async (req: Request, res: Response) => {
   const errors = validationResult(req); //checking for validation error;
   if (!errors.isEmpty()) {
-    res.status(400).json({
-      message: errors.array(),
-    });
-    return;
+    throw new ValidationError(
+      "Validation failed: " +
+        errors
+          .array()
+          .map((e) => e.msg)
+          .join(", ")
+    );
   } //validation failed;
   const { email } = req.body;
   let user = await User.findOne({ email });
@@ -76,25 +86,28 @@ export const signInUser = async (req: Request, res: Response) => {
     user,
     token,
   });
-};
+});
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = asyncHandler(async (req: Request, res: Response) => {
   const errors = validationResult(req); //checking for validation error;
   if (!errors.isEmpty()) {
-    res.status(400).json({
-      message: errors.array(),
-    });
-    return;
+    throw new ValidationError(
+      "Validation failed: " +
+        errors
+          .array()
+          .map((e) => e.msg)
+          .join(", ")
+    );
   } //validation failed;
-  const {id} = req.params;
+  const { id } = req.params;
   const { username } = req.body;
 
-  if(!username){
-    res.status(400).json({message:'Bad Request'});
+  if (!username) {
+    res.status(400).json({ message: "Bad Request" });
     return;
   }
 
-  let existingUser = await User.findById( id );
+  let existingUser = await User.findById(id);
 
   if (!existingUser) {
     res.status(404).json({
@@ -104,14 +117,20 @@ export const updateUser = async (req: Request, res: Response) => {
   if (existingUser) {
     existingUser.username = username;
     const updatedUser = await existingUser.save();
+
+   
+      if (!updatedUser) {
+        throw new DatabaseError("Failed to update User");
+      }
+
     res.status(200).json({
       message: "Updated Successfully",
       updatedUser,
     });
   }
-};
+});
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const user = User.findById(id);
@@ -124,22 +143,24 @@ export const deleteUser = async (req: Request, res: Response) => {
 
   const deletedUser = await User.findByIdAndDelete(id);
 
-  return res.status(200).json({
+  if(!deleteUser){
+      throw new DatabaseError('Failed to delete User')
+  }
+
+    res.status(200).json({
     message: "User deleted successfully",
     deletedUser,
   });
-};
+});
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
   //all users from the database
   const users = await User.find();
 
   if (!users || users.length === 0) {
-    return res.status(404).json({
-      message: "No users found",
-    });
+    throw new DatabaseError('Failed to load Users')
   }
 
   //  list of users
-  return res.status(200).json(users);
-};
+  res.status(200).json(users);
+});
