@@ -41,6 +41,13 @@ export const createUser = async (req: Request, res: Response) => {
 };
 
 export const signInUser = async (req: Request, res: Response) => {
+  const errors = validationResult(req); //checking for validation error;
+  if (!errors.isEmpty()) {
+    res.status(400).json({
+      message: errors.array(),
+    });
+    return;
+  } //validation failed;
   const { email } = req.body;
   let user = await User.findOne({ email });
 
@@ -50,7 +57,7 @@ export const signInUser = async (req: Request, res: Response) => {
     });
     return;
   }
-
+  //password comparison
   let isPassword = user
     ? await bcrypt.compare(req.body.password, user.password)
     : false;
@@ -62,12 +69,39 @@ export const signInUser = async (req: Request, res: Response) => {
   }
 
   let token = generateToken(user);
-  
+
   res.status(200).json({
     success: true,
     message: "Successfully login",
     user,
     token,
   });
-
 };
+
+export const updateUser = async (req: Request, res: Response) => {
+  const errors = validationResult(req); //checking for validation error;
+  if (!errors.isEmpty()) {
+    res.status(400).json({
+      message: errors.array(),
+    });
+    return;
+  } //validation failed;
+
+  const { username, email } = req.body;
+  let existingUser = await User.findOne({ email });
+
+  if (!existingUser) {
+    res.status(404).json({
+      message: "User not found",
+    });
+  }
+  if (existingUser) {
+    existingUser.username = username;
+    const updatedUser = await existingUser.save();
+    res.status(200).json({
+      message: "Updated Successfully",
+      updatedUser,
+    });
+  }
+};
+
