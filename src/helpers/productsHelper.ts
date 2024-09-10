@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { ProductTypes } from '../../types/productTypes';
+import { ProductTypes } from '../types/productTypes';
 
 const dataFilePath = path.join(__dirname,'../../../productData.json');//path of the file
 

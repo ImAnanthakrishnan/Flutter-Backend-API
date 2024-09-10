@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { v4 } from "uuid";
-import { readData, writeData } from "../helpers/productsHelper";
+import { readData, writeData } from "../../helpers/productsHelper";
 import { ProductTypes } from "../../types/productTypes";
 
 export const createProduct = async (req: Request, res: Response) => {
