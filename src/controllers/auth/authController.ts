@@ -86,9 +86,15 @@ export const updateUser = async (req: Request, res: Response) => {
     });
     return;
   } //validation failed;
+  const {id} = req.params;
+  const { username } = req.body;
 
-  const { username, email } = req.body;
-  let existingUser = await User.findOne({ email });
+  if(!username){
+    res.status(400).json({message:'Bad Request'});
+    return;
+  }
+
+  let existingUser = await User.findById( id );
 
   if (!existingUser) {
     res.status(404).json({
@@ -106,9 +112,9 @@ export const updateUser = async (req: Request, res: Response) => {
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
-  const { email } = req.body;
+  const { id } = req.params;
 
-  const user = User.findOne({ email });
+  const user = User.findById(id);
 
   if (!user) {
     res.status(404).json({
@@ -116,7 +122,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     });
   }
 
-  const deletedUser = await User.findOneAndDelete(email);
+  const deletedUser = await User.findByIdAndDelete(id);
 
   return res.status(200).json({
     message: "User deleted successfully",
