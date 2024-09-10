@@ -123,3 +123,17 @@ export const deleteUser = async (req: Request, res: Response) => {
     deletedUser,
   });
 };
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  //all users from the database
+  const users = await User.find();
+
+  if (!users || users.length === 0) {
+    return res.status(404).json({
+      message: "No users found",
+    });
+  }
+
+  //  list of users
+  return res.status(200).json(users);
+};
