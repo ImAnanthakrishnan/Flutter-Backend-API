@@ -105,3 +105,21 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteUser = async (req: Request, res: Response) => {
+  const { email } = req.body;
+
+  const user = User.findOne({ email });
+
+  if (!user) {
+    res.status(404).json({
+      message: "User not found",
+    });
+  }
+
+  const deletedUser = await User.findOneAndDelete(email);
+
+  return res.status(200).json({
+    message: "User deleted successfully",
+    deletedUser,
+  });
+};
