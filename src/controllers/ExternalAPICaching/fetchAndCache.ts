@@ -1,8 +1,8 @@
 import axios from "axios";
 import { Request, Response } from "express";
 import { cache } from "../../middlewares/cache/cacheMiddleware";
-
-export const getWeatherData = async (req: Request, res: Response) => {
+import asyncHandler from 'express-async-handler'
+export const getWeatherData = asyncHandler(async (req: Request, res: Response) => {
   const { city } = req.params;
   try {
     const response = await axios.get(
@@ -21,4 +21,4 @@ export const getWeatherData = async (req: Request, res: Response) => {
     console.error("Error fetching data:", err);
     res.status(500).json({ message: "Error fetching weather data" });
   }
-};
+});

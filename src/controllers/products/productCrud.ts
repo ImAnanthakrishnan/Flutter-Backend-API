@@ -3,15 +3,13 @@ import { validationResult } from "express-validator";
 import { v4 } from "uuid";
 import { readData, writeData } from "../../helpers/productsHelper";
 import { ProductTypes } from "../../types/productTypes";
-
-export const createProduct = async (req: Request, res: Response) => {
+import { ValidationError } from "../../helpers/error";
+import asyncHandler from 'express-async-handler';
+export const createProduct = asyncHandler(async (req: Request, res: Response) => {
   const errors = validationResult(req); //checking for validation error;
   if (!errors.isEmpty()) {
-    res.status(400).json({
-      message: errors.array(),
-    });
-    return;
-  } //validation failed;
+    throw new ValidationError('Validation failed: ' + errors.array().map(e => e.msg).join(', '));
+  }//validation error
 
   const { item_name, price, description } = req.body;
   const products: ProductTypes[] = readData(); //reads data from the file
@@ -40,14 +38,14 @@ export const createProduct = async (req: Request, res: Response) => {
     message: "Product created",
     newProduct,
   });
-};
+});
 
-export const getAllProduct = async (req: Request, res: Response) => {
+export const getAllProduct = asyncHandler(async (req: Request, res: Response) => {
   const products = readData();
   res.status(200).json(products);
-};
+});
 
-export const getSingleProduct = async (req: Request, res: Response) => {
+export const getSingleProduct =asyncHandler( async (req: Request, res: Response) => {
   const id = req.params.id;
   const products: ProductTypes[] = readData(); //getting data;
 
@@ -65,17 +63,14 @@ export const getSingleProduct = async (req: Request, res: Response) => {
     message: "Successfull",
     product,
   });
-};
+});
 
-export const updateProduct = async (req: Request, res: Response) => {
+export const updateProduct =asyncHandler( async (req: Request, res: Response) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res.status(400).json({
-      message: errors.array(),
-    });
-    return;
-  } //validation failed;
+    throw new ValidationError('Validation failed: ' + errors.array().map(e => e.msg).join(', '));
+  }//validation error
 
   const id = req.params.id;
   const { item_name, price, description } = req.body;
@@ -103,9 +98,9 @@ export const updateProduct = async (req: Request, res: Response) => {
     message: "Item updated",
     product: products[productIndex],
   });
-};
+});
 
-export const deleteProduct = async (req: Request, res: Response) => {
+export const deleteProduct = asyncHandler(async (req: Request, res: Response) => {
   const products: ProductTypes[] = readData(); //data read;
 
   const productIndex = products.findIndex(
@@ -121,4 +116,4 @@ export const deleteProduct = async (req: Request, res: Response) => {
   writeData(products); //applying changes;
 
   res.status(200).json({ message: "Product deleted successfully" });
-};
+});
