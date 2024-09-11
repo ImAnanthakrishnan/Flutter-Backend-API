@@ -1,5 +1,15 @@
 {
-  message: '{"method":"GET","url":"/api/v1/weather/India","status":"200","responseTime":"275.151"}',
+  message: '{"method":"POST","url":"/api/v1/socket","status":"200","responseTime":"54.668"}',
   level: 'info',
-  timestamp: '2024-09-10T14:14:38.863Z'
+  timestamp: '2024-09-10T17:35:57.187Z'
+}
+{
+  message: '{"method":"POST","url":"/api/v1/socket","status":"200","responseTime":"34.379"}',
+  level: 'info',
+  timestamp: '2024-09-10T17:37:33.944Z'
+}
+{
+  message: '{"method":"POST","url":"/api/v1/socket","status":"200","responseTime":"39.344"}',
+  level: 'info',
+  timestamp: '2024-09-10T17:38:35.755Z'
 }
