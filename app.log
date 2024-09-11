@@ -13,3 +13,18 @@
   level: 'info',
   timestamp: '2024-09-10T17:38:35.755Z'
 }
+{
+  message: '{"method":"POST","url":"/api/v1/socket","status":"500","responseTime":"29.492"}',
+  level: 'info',
+  timestamp: '2024-09-11T09:39:53.186Z'
+}
+{
+  message: '{"method":"POST","url":"/api/v1/socket","status":"200","responseTime":"25.067"}',
+  level: 'info',
+  timestamp: '2024-09-11T09:43:50.231Z'
+}
+{
+  message: '{"method":"POST","url":"/api/v1/socket","status":"200","responseTime":"114.190"}',
+  level: 'info',
+  timestamp: '2024-09-11T09:57:32.137Z'
+}

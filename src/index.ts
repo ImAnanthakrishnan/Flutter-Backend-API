@@ -10,8 +10,8 @@ import path from "path";
 import morgan from "morgan";
 import logger from "./helpers/logger";
 
-const envPath = path.resolve(__dirname, "../../.env");
-   
+const envPath = path.resolve(__dirname, "../.env");
+
 dotenv.config({ path: envPath });
 
 const app: Express = express();
@@ -36,18 +36,18 @@ app.use(
   })
 ); //logger middleware
 
-export const io = new Server(server, {
+const io = new Server(server, {
   pingTimeout: 60000,
 });
 
 io.on("connection", (socket) => {
   console.log(`New client connected: ${socket.id}`);
 
-  // Broadcast message to all clients when a new message is posted
+  // message to all clients when a new message is posted
   socket.on("newMessage", (message) => {
     console.log(`Message received: ${message}`);
     // Notify all connected clients
-    io.emit("receiveNotification", `New message: ${message}`);
+    io.emit("notification", message);
   });
 
   // Handle client disconnection
