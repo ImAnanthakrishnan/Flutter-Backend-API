@@ -10,11 +10,8 @@ import path from "path";
 import morgan from "morgan";
 import logger from "./helpers/logger";
 
-const envPath =
-  process.env.NODE_ENV === "production"
-    ? path.resolve(__dirname, "../../.env")
-    : path.resolve(__dirname, "../.env");
-
+const envPath = path.resolve(__dirname, "../../.env");
+   
 dotenv.config({ path: envPath });
 
 const app: Express = express();
