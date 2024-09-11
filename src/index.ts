@@ -6,12 +6,13 @@ import { notFound } from "./middlewares/errors/errorMiddleware";
 import { errorHandler } from "./middlewares/products/productErrorHandler";
 import {Server} from 'socket.io';
 import http from 'http';
+import path from "path";
 import morgan from 'morgan';
 import logger from "./helpers/logger";
 
-
-
-dotenv.config();
+const envPath = path.resolve(__dirname, '../.env');
+console.log(envPath)
+dotenv.config({path:envPath});
 
 const app: Express = express();
 const port = process.env.PORT || 5001;
@@ -19,7 +20,7 @@ const mongoUri = process.env.MONGO_URL;
 const server = http.createServer(app);
 const morganFormat = ":method :url :status :response-time ms";
 console.log('mogouri:',mongoUri);
-console.log('env:',process.env)
+
 app.use(
   morgan(morganFormat, {
     stream: {
@@ -77,6 +78,7 @@ import productRouter from "./routes/product";
 import weatherRouter from "./routes/weather";
 import authRouter from "./routes/user";
 import socketRouter from "./routes/socket";
+
 
 
 app.use(`${process.env.BASE_URL}/products`, productRouter); //product crud
