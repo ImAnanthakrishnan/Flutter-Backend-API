@@ -7,7 +7,8 @@ export const notification = asyncHandler(
     const { message } = req.body;
 
     if (message) {
-      const socket = io("http://localhost:5000", { transports: ["websocket"] });
+      const server = process.env.NODE_ENV = "development" ? process.env.DEVELOPMENT_SERVER : process.env.PRODUCTION_SERVER
+      const socket = io(`${server}`, { transports: ["websocket"] });
       socket.emit("newMessage", message);
       // Emit event to WebSocket clients
       res.status(200).json({ status: "Notification sent", message });

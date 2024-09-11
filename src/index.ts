@@ -10,7 +10,7 @@ import path from "path";
 import morgan from "morgan";
 import logger from "./helpers/logger";
 
-const envPath = path.resolve(__dirname, "../.env");
+const envPath = path.resolve(__dirname, "../../.env");
 
 dotenv.config({ path: envPath });
 

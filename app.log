@@ -28,3 +28,8 @@
   level: 'info',
   timestamp: '2024-09-11T09:57:32.137Z'
 }
+{
+  message: '{"method":"POST","url":"/api/v1/socket","status":"200","responseTime":"47.994"}',
+  level: 'info',
+  timestamp: '2024-09-11T10:07:12.920Z'
+}
