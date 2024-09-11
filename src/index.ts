@@ -15,7 +15,8 @@ const port = process.env.PORT || 5001;
 const mongoUri = process.env.MONGO_URL;
 const server = http.createServer(app);
 const morganFormat = ":method :url :status :response-time ms";
-
+console.log('mogouri:',mongoUri);
+console.log('env:',process.env)
 app.use(
   morgan(morganFormat, {
     stream: {
